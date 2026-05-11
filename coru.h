@@ -12,6 +12,10 @@ extern "C" {
 #endif
 
 #include "coru_util.h"
+#ifdef CORU_ON_VALGRIND
+#include <valgrind/valgrind.h>
+#endif
+
 
 
 // Possible error codes, these are negative to allow
@@ -27,6 +31,9 @@ typedef struct coru {
     void *sp;           // stack information
     uintptr_t *canary;  // canary location, NULL if not supported
     void *allocated;    // buffer if allocated, NULL if user provided
+#ifdef CORU_ON_VALGRIND
+    unsigned int vg_stack_id;
+#endif
 } coru_t;
 
 

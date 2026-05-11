@@ -42,10 +42,20 @@ int coru_create_inplace(coru_t *coru,
         *coru->canary = (uintptr_t)0x636f7275;
     }
 
+#ifdef CORU_ON_VALGRIND
+    coru->vg_stack_id = VALGRIND_STACK_REGISTER(
+        coru->sp,
+        (char*)coru->sp + size
+    );
+#endif
+
     return 0;
 }
 
 void coru_destroy(coru_t *coru) {
+#ifdef CORU_ON_VALGRIND
+    VALGRIND_STACK_DEREGISTER(coru->vg_stack_id);
+#endif
     coru_free(coru->allocated);
 }
 
